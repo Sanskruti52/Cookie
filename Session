@@ -1,0 +1,553 @@
+1. Write a PHP script to keep track of number of times the web page has been access. [Use
+
+session and cookies]
+
+<?php
+
+session_start();
+
+if(isset($_SESSION['page_views']))
+
+{
+
+$_SESSION['page_views']++;
+
+} Else {
+
+$_SESSION['page_views'] = 1;
+
+}
+
+echo "Page Views: " . $_SESSION['page_views'];
+
+?>
+
+2. Write a PHP script to change the preferences of your web page like font style, font size, font
+
+color, background color using cookie. Display selected setting on next web page and actual
+
+implementation (with new settings) on third page.
+
+As1sa2.html
+
+<html>
+
+<body>
+
+<form action="as1sa2.php" method="get">
+
+<center>
+
+<b>Select font style :</b><input type=text name=s1> <br>
+
+<b>Enter font size : </b><input type=text name=s><br>
+
+<b>Enter font color : </b><input type=text name=c><br>
+
+<b>Enter background color :</b> <input type=text name=b><br>
+
+<input type=submit value="Next">
+
+</center>
+
+</form>
+
+</body>
+
+</html>
+As1sa2.php
+
+<?php
+
+echo "style is ".$_GET['s1']."<br>color is ".$_GET['c']."<br>Background color
+
+is ".$_GET['b']."<br>size is ".$_GET['s'];
+
+setcookie("set1",$_GET['s1'],time()+3600);
+
+setcookie("set2",$_GET['c'],time()+3600);
+
+setcookie("set3",$_GET['b'],time()+3600);
+
+setcookie("set4",$_GET['s'],time()+3600);
+
+?>
+
+<html>
+
+<body>
+
+<form action="as1sa22.php">
+
+<input type=submit value=OK>
+
+</form>
+
+</body>
+
+</html>
+
+As1sa22.php
+
+<?php
+
+$style = $_COOKIE['set1'];
+
+$color = $_COOKIE['set2'];
+
+$size = $_COOKIE['set4'];
+
+$b_color = $_COOKIE['set3'];
+
+$msg = "NR Classes";
+
+echo "<body bgcolor=$b_color>";
+
+echo "<font color=$color size=$size>$msg";
+
+echo "</font></body>";
+
+?>
+
+1. Write a PHP script to accept username and password. If in the first three chances, username
+
+and password entered is correct then display second form with “Welcome message” otherwise
+
+display error message. [Use Session]
+
+as1sb1.html
+
+<html>
+
+<head>
+
+<script>
+
+function getans()
+
+{
+
+st1=document.getElementById('txtname').value;
+
+st2=document.getElementById('txtpass').value;
+
+ob=new XMLHttpRequest();
+
+ob.onreadystatechange=function()
+
+{
+
+if(ob.readyState==4 && ob.status==200)
+
+{
+
+if(ob.responseText==3)
+
+{
+
+alert("sorry you lost the chances to login");
+
+location="error.html";
+
+}
+
+else if(ob.responseText=="correct")
+
+{
+
+alert("you entered correct details");
+
+}
+
+else alert(ob.responseText);
+
+}
+
+}
+ob.open("GET","as1sb1.php?n="+st1+"&p="+st2);
+
+ob.send();
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<input type=text id=txtname placeholder="username"></br>
+
+<input type=password id=txtpass placeholder="password"></br>
+
+<input type="button" onclick="getans()" value="Login">
+
+</body>
+
+</html>
+
+error.html
+
+<html>
+
+<body>
+
+<h1>YOu lossed the chances of login</h1>
+
+</body>
+
+</html>
+
+as1sb1.php
+
+<?php
+
+session_start();
+
+$nm=$_GET['n'];
+
+$ps=$_GET['p'];
+
+if($nm==$ps)
+
+{
+
+echo "correct";
+
+}
+
+else if(isset($_SESSION['cnt']))
+
+{
+
+$x=$_SESSION['cnt'];
+
+$x=$x+1;
+
+$_SESSION['cnt']=$x;
+
+echo $_SESSION['cnt'];
+
+if($_SESSION['cnt']>=3)
+$_SESSION['cnt']=1;
+
+}
+
+else
+
+{
+
+$_SESSION['cnt']=1;
+
+echo "1";
+
+}
+
+?>
+
+2. Write a PHP script to accept Employee details (Eno, Ename, Address) on first page. On
+
+second page accept earning (Basic, DA, HRA). On third page print Employee information (Eno,
+
+Ename, Address, Basic, DA, HRA, Total) [ Use Session]
+
+Ans- as1sb2.html
+
+<html>
+
+<body>
+
+<form action="as1sb2.php" method="get">
+
+<center> <h2>Enter Enployee Details :</h2> <br>
+
+<table>
+
+<tr> <td><b>Emp no :</b></td>
+
+<td><input type=text name=eno></td>
+
+</tr>
+
+<tr> <td><b> Name :</b></td>
+
+<td><input type=text name=enm></td>
+
+</tr>
+
+<tr> <td><b>Address :</b></td>
+
+<td><input type=text name=eadd></td>
+
+</tr>
+
+</table>
+
+<br> <input type=submit value=Show name=submit>
+
+</center>
+
+</form>
+
+</body>
+
+</html>
+
+as1sb2.php
+
+<?php
+
+session_start();
+
+$eno = $_GET['eno'];
+
+$enm = $_GET['enm'];
+
+$eadd = $_GET['eadd'];
+
+$_SESSION['eno'] = $eno;
+
+$_SESSION['enm'] = $enm;
+
+$_SESSION['eadd'] = $eadd;
+
+?>
+<html>
+
+<body>
+
+<form action="as1sb22.php" method="post">
+
+<center>
+
+<h2>Enter Earnings of Employee:</h2>
+
+<table>
+
+<tr><td>Basic : </td><td><input type="text" name="e1"></td><tr>
+
+<tr><td>DA : </td><td><input type="text" name="e2"></td></tr>
+
+<tr><td>HRA : </td><td><input type="text" name="e3"></td></tr>
+
+<tr><td></td><td><input type="submit" value=Next></td></tr>
+
+</table>
+
+</center>
+
+</form>
+
+</body>
+
+</html>
+
+as1sb22.php
+
+<?php
+
+session_start();
+
+$e1 = $_POST['e1'];
+
+$e2 = $_POST['e2'];
+
+$e3= $_POST['e3'];
+
+echo "<h3>Employee Details</h3> ";
+
+echo "Name : ".$_SESSION['eno']."<br>";
+
+echo "Address : ".$_SESSION['enm']."<br>";
+
+echo "Class : ".$_SESSION['eadd']."<br><br>";
+
+echo "basic : ".$e1."<br>";
+
+echo "DA : ".$e2."<br>";
+
+echo "HRA : ".$e3."<br>";
+
+$total = $e1+$e2+$e3;
+
+echo "<h2>Total Of Earnings Is : ".$total."</h2>";
+
+?>
+
+Set C 1.
+
+Crete a form to accept customer information ( Name, Addr, MobNo). Once the customer
+
+information is accepted, accept product information in the next form (ProdName, Qty,Rate).
+
+Generate the bill for the customer in the next form. Bill should contain the customer
+
+information and the information of the products entered.
+
+Ans -as1sc1.html
+
+<html>
+
+<body>
+
+<form method ="post" action="as1sc1.php">
+
+<table border="1">
+
+<tr>
+
+<td>customer Name:-</td>
+
+<td><input type="text" name="name"></td>
+
+</tr>
+
+<tr>
+
+<td>customer Phone Number:-</td>
+<td><input type="text" name="ph-no"></td>
+
+</tr>
+
+<tr>
+
+<td>customer address:-</td>
+
+<td><input type="text" name="address"></td>
+
+</tr>
+
+<tr>
+
+<td></td>
+
+<td><input type="submit" value="save"></td>
+
+</tr>
+
+</table>
+
+</form></body></html>
+
+as1sc1.php
+
+<html>
+
+<body>
+
+<?php
+
+setCookie('name',$_POST["name"]);
+
+setCookie('ph-no',$_POST["ph-no"]);
+
+setCookie('address',$_POST["address"]);
+
+echo"Hello".$_POST["name"]."!Enter Details....<br>";
+
+?>
+
+<form method ="post" action="as1sc22.php">
+
+<table border="1">
+
+<tr><td>Product name</td>
+
+<td><input type="text" name="pname"></td>
+
+</tr>
+
+<tr><td>qty</td>
+
+<td><input type="text" name="qty"></td>
+
+</tr>
+
+<tr><td>rate</td>
+
+<td><input type="text" name="rate"></td>
+
+</tr>
+
+<tr><td></td>
+
+<td><input type="submit" name="submit" value="DISPLAY"></td>
+
+</tr>
+
+</table>
+
+</form>
+
+</body>
+
+</html>
+
+as1sc22.php
+
+<html>
+
+<body>
+
+<?php
+
+echo "<b> customer Details</b><br>";
+
+echo "<table border='1'>";
+echo "<tr><td>";
+
+echo"customerName:".$_COOKIE["name"]."<br>";
+
+echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo"customer phone:-".$_COOKIE["ph-no"]."<br>";
+
+echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo"Studcustomerent address:-".$_COOKIE["address"]."<br>";
+
+echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo "<b> customer Bill</b><br>";
+
+echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo"pname:".$_REQUEST["pname"];echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo"qty:".$_REQUEST["qty"];echo "</tr></td>";
+
+echo "<tr><td>";
+
+echo"rate:".$_REQUEST["rate"];echo "</tr></td>";
+
+echo "</table>";
+
+if(isset($_POST['submit']))
+
+{
+
+$qty=(int)$_POST['qty'];
+
+$rate=(int)$_POST['rate'];
+
+$total = $qty*$rate;
+
+echo"Total=".$total;
+
+}
+
+?>
+
+</body>
+
+</html>
